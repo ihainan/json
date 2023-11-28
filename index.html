@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.js"></script>
+  <script>
+
+    $(document).ready(function () {
+      $("#submit_button").bind("click", function () {
+        let text = $("#input_textarea").val();
+        let json = JSON.parse(text);
+        values = []
+        if (Array.isArray(json)) {
+          console.log("is array");
+          let keys = Object.keys(json[0]);
+          json.forEach((elem) => {
+            record = [];
+            keys.forEach((key) => {
+              record.push(elem[key]);
+            });
+            values.push(record);
+          });
+          newObj =
+          {
+            'fields': keys,
+            'values': values
+          };
+          let resultStr = JSON.stringify(newObj, null, 2);
+          console.log(resultStr);
+          $("#output_textarea").val(resultStr);
+        } else {
+          console.log("is obj");
+          let fields = json['fields'];
+          let values = json['values'];
+          pairs = []
+          console.log(fields);
+          console.log(values);
+          values.forEach((value) => {
+            record = {};
+            for (let i = 0; i < fields.length; i++) {
+              record[fields[i]] = value[i];
+            }
+            pairs.push(record);
+          });
+          let resultStr = JSON.stringify(pairs, null, 2);
+          console.log(resultStr);
+          $("#output_textarea").val(resultStr);
+        }
+      });
+    });
+
+
+  </script>
+  <style>
+    textarea {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <p>Input: </p>
+  <!-- [
+  {
+    "k1": 100,
+    "k2": 200
+  }
+] -->
+  <textarea rows="15" id="input_textarea">
+{
+  "fields": [
+    "k1",
+    "k2"
+  ],
+  "values": [
+    [
+      100,
+      200
+    ]
+  ]
+}
+  </textarea>
+  <p></p><input type="button" value="convert" id="submit_button"></p>
+  <p>Output: </p>
+  <textarea rows="15" id="output_textarea"></textarea>
+
+</body>
+
+</html>
+
